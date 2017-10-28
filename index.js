@@ -5,7 +5,7 @@ const videos = [];
 const podcasts = [];
 const books = [];
 const articles = [];
-
+const newsletters = [];
 
 let content = '# Engineering Manager Resources \n A list of engineering manager resource links.';
 
@@ -15,48 +15,37 @@ let content = '# Engineering Manager Resources \n A list of engineering manager 
    const url = resource.url;
    const cat = resource.cat;
 
-   if(cat === 'book') {
-     books.push({'title': title, 'url': url});
-   }else if(cat === 'video') {
-     videos.push({'title': title, 'url': url});
-   }else if(cat === 'podcast') {
-     podcasts.push({'title': title, 'url': url});
-   }else if(cat === 'article') {
-     articles.push({'title': title, 'url': url});
-   }
+   const categoryMap = {
+     book: books,
+     video: videos,
+     podcast: podcasts,
+     article: articles,
+     newsletter: newsletters
+   };
+
+   categoryMap[cat].push({'title': title, 'url': url});
  }
 
- // display list of books
- content += '\n## Books';
- for (const bookItem of books) {
-   content += (
-     `\n * [${bookItem.title}](${bookItem.url})`
-   );
- }
+ // create content of the list of links
+const ouputLinks = (obj, title) => {
+  content += `\n\n## ${title}`;
+  const duplicates = [];
+  for (const out of obj) {
+    // avoid duplicates
+    if (duplicates.indexOf(out.url) === -1) {
+      duplicates.push(out.url);
+      content += (
+       `\n * [${out.title}](${out.url})`
+     );
+    }
+  }
+}
 
- // display list of videos
- content += '\n\n## Videos';
- for (const videoItem of videos) {
-   content += (
-     `\n * [${videoItem.title}](${videoItem.url})`
-   );
- }
-
- // display list of Podcasts
- content += '\n\n## Podcasts';
- for (const podcastItem of podcasts) {
-   content += (
-     `\n * [${podcastItem.title}](${podcastItem.url})`
-   );
- }
-
- // display list of Articles
- content += '\n\n## Articles';
- for (const articleItem of articles) {
-   content += (
-     `\n * [${articleItem.title}](${articleItem.url})`
-   );
- }
+ouputLinks(books, 'Books');
+ouputLinks(videos, 'Videos');
+ouputLinks(podcasts, 'Podcasts');
+ouputLinks(articles, 'Articles');
+ouputLinks(newsletters, 'Newsletters');
 
 // create contributing instructions
 content += ('\n\n## Contributing \n' +
